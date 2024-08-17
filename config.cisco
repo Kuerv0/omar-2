@@ -1,1 +1,200 @@
-!
+! ------------------------------------------------------------------------------
+! SA1
+! ------------------------------------------------------------------------------
+
+!{
+vlan 170
+  name EMPLEADOS
+vlan 171
+  name INVITADOS
+vlan 172
+  name ADMIN
+vlan 173
+  name NATIVA
+vlan 174
+  name SINUSO
+  exit
+
+interface range Gig0/1 , Fa0/21 - 24
+ sw mode trunk
+ sw trunk native vlan 173
+ switchport nonegotiate
+
+interface range Fa0/1 - 20 , Gig0/2
+ switchport access vlan 174
+ switchport mode access
+ shutdown
+
+! port-channel a SA2
+interface range Fa0/21 - 22
+  channel-group 1 mode on
+
+! port-channel a SA3
+interface range Fa0/23 - 24
+  channel-group 2 mode desirable
+
+spanning-tree mode rapid-pvst
+
+spanning-tree vlan 170 root primary
+
+!}
+
+! ------------------------------------------------------------------------------
+! SA2
+! ------------------------------------------------------------------------------
+
+!{
+vlan 170
+  name EMPLEADOS
+vlan 171
+  name INVITADOS
+vlan 172
+  name ADMIN
+vlan 173
+  name NATIVA
+vlan 174
+  name SINUSO
+  exit
+
+interface Gig0/1
+  switchport mode dynamic desirable
+
+interface range Fa0/21 - 24
+ sw mode trunk
+ sw trunk native vlan 173
+ switchport nonegotiate
+
+interface range Fa0/1 - 20 , Gig0/2
+ switchport access vlan 174
+ switchport mode access
+ shutdown
+
+! port-channel a SA1
+interface range Fa0/21 - 22
+  channel-group 1 mode on
+
+! port-channel a SA3
+interface range Fa0/23 - 24
+  channel-group 3 mode active
+
+spanning-tree mode rapid-pvst
+
+! ¿Cuál es manual y cuál es auto?
+spanning-tree vlan 171 root secondary
+
+!}
+
+! ------------------------------------------------------------------------------
+! SA3
+! ------------------------------------------------------------------------------
+
+!{
+vlan 170
+  name EMPLEADOS
+vlan 171
+  name INVITADOS
+vlan 172
+  name ADMIN
+vlan 173
+  name NATIVA
+vlan 174
+  name SINUSO
+  exit
+
+interface range Fa0/21 - 24
+ sw mode trunk
+ sw trunk native vlan 173
+ switchport nonegotiate
+
+interface range Fa0/1 - 2
+  switchport access vlan 170
+  switchport mode access
+
+  spanning-tree portfast
+  spanning-tree bpduguard enable
+
+  switchport port-security
+  switchport port-security mac-address sticky
+  switchport port-security maximum 1
+  switchport port-security violation restrict
+
+interface range Fa0/11 - 12
+  switchport access vlan 171
+  switchport mode access
+
+  spanning-tree portfast
+  spanning-tree bpduguard enable
+
+  switchport port-security
+  switchport port-security mac-address sticky
+  switchport port-security maximum 1
+  switchport port-security violation restrict
+
+interface range Fa0/3 - 10 , Fa0/13 - 20 , Gig0/2
+ switchport access vlan 174
+ switchport mode access
+ shutdown
+
+! port-channel a SA1
+interface range Fa0/23 - 24
+  channel-group 2 mode auto
+
+! port-channel a SA1
+interface range Fa0/21 - 22
+  channel-group 3 mode passive
+
+spanning-tree mode rapid-pvst
+
+!}
+
+! ------------------------------------------------------------------------------
+! MLA
+! ------------------------------------------------------------------------------
+
+!{
+vlan 170
+  name EMPLEADOS
+vlan 171
+  name INVITADOS
+vlan 172
+  name ADMIN
+vlan 173
+  name NATIVA
+vlan 174
+  name SINUSO
+
+interface Fa0/2
+  switchport mode dynamic desirable
+!}
+
+! ------------------------------------------------------------------------------
+! RA1
+! ------------------------------------------------------------------------------
+
+!{
+
+!}
+
+! ------------------------------------------------------------------------------
+! RA2
+! ------------------------------------------------------------------------------
+
+!{
+interface Fa0/1
+ no shutdown
+
+interface f0/1.170
+  encapsulation dot1Q 10 
+
+interface f0/1.171
+  encapsulation dot1Q 10 
+
+interface f0/1.172
+  encapsulation dot1Q 10 
+
+interface f0/1.173
+  encapsulation dot1Q 10 
+
+interface f0/1.174
+  encapsulation dot1Q 10 
+!}
