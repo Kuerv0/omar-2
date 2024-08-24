@@ -37,6 +37,10 @@ spanning-tree mode rapid-pvst
 
 spanning-tree vlan 170 root primary
 
+interface vlan 172
+  ip address 10.1.172.5
+  no shutdown
+
 !}
 
 ! ------------------------------------------------------------------------------
@@ -81,6 +85,10 @@ spanning-tree mode rapid-pvst
 
 ! ¿Cuál es manual y cuál es auto?
 spanning-tree vlan 171 root secondary
+
+interface vlan 172
+  ip address 10.1.172.6
+  no shutdown
 
 !}
 
@@ -145,6 +153,10 @@ interface range Fa0/21 - 22
 
 spanning-tree mode rapid-pvst
 
+interface vlan 172
+  ip address 10.1.172.7
+  no shutdown
+
 !}
 
 ! ------------------------------------------------------------------------------
@@ -163,6 +175,7 @@ vlan 173
 vlan 174
   name SINUSO
 
+! Mover a la VLAN SINUSO los sinuso
 interface Fa0/2
   switchport mode dynamic desirable
 !}
@@ -172,7 +185,13 @@ interface Fa0/2
 ! ------------------------------------------------------------------------------
 
 !{
+interface Fa0/1
+  no shutdown
+  ip address 10.1.162.1 255.255.255.0
 
+interface Fa0/0
+  no shutdown
+  ip address 10.1.163.1 255.255.255.0
 !}
 
 ! ------------------------------------------------------------------------------
@@ -180,21 +199,30 @@ interface Fa0/2
 ! ------------------------------------------------------------------------------
 
 !{
+interface Fa0/0
+  no shutdown
+  ip address 10.1.162.2 255.255.255.0
+
 interface Fa0/1
  no shutdown
 
 interface f0/1.170
   encapsulation dot1Q 10 
+  ip address 10.1.170.2 255.255.255.0
 
 interface f0/1.171
   encapsulation dot1Q 10 
+  ip address 10.1.171.2 255.255.255.0
 
 interface f0/1.172
   encapsulation dot1Q 10 
+  ip address 10.1.172.2 255.255.255.0
 
 interface f0/1.173
   encapsulation dot1Q 10 
+  ip address 10.1.173.2 255.255.255.0
 
 interface f0/1.174
   encapsulation dot1Q 10 
+  ip address 10.1.174.2 255.255.255.0
 !}
