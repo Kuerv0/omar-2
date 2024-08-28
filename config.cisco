@@ -164,6 +164,7 @@ interface vlan 172
 ! ------------------------------------------------------------------------------
 
 !{
+  
 vlan 170
   name EMPLEADOS
 vlan 171
@@ -175,9 +176,51 @@ vlan 173
 vlan 174
   name SINUSO
 
-! Mover a la VLAN SINUSO los sinuso
+interface Fa0/1
+  no switchport
+  ip address 10.1.163.2 255.255.255.0
+  no shutdown
+
 interface Fa0/2
   switchport mode dynamic desirable
+
+interface range Fa0/3 - 24 , Gig0/1 , Gig0/2
+ switchport access vlan 174
+ switchport mode access
+ shutdown
+
+spanning-tree mode rapid-pvst
+
+interface vlan 170
+  ip address 10.1.170.3 255.255.255.0
+  no shutdown
+
+  standby 170 ip 10.1.170.8
+  standby 170 priority 100
+  standby 170 preempt
+
+interface vlan 171
+  ip address 10.1.171.3 255.255.255.0
+  no shutdown
+
+  standby 171 ip 10.1.171.8
+  standby 171 priority 150
+  standby 171 preempt
+
+interface vlan 172
+  ip address 10.1.172.3 255.255.255.0
+  no shutdown
+
+interface vlan 173
+  ip address 10.1.173.3 255.255.255.0
+  no shutdown
+
+interface vlan 174
+  ip address 10.1.174.3 255.255.255.0
+  no shutdown
+
+ip routing
+
 !}
 
 ! ------------------------------------------------------------------------------
@@ -192,6 +235,21 @@ interface Fa0/1
 interface Fa0/0
   no shutdown
   ip address 10.1.163.1 255.255.255.0
+
+ip dhcp excluded-address 10.1.170.1 10.1.170.10
+ip dhcp excluded-address 10.1.171.1 10.1.171.10
+
+ip dhcp pool DEADPOOL-EMPLEADOS
+    network 10.1.170.0 255.255.255.0
+    default-router 10.1.170.8
+    dns-server 8.8.8.8
+    domain-name empleados.com.co
+
+ip dhcp pool DEADPOOL-INVITADOS
+    network 10.1.171.0 255.255.255.0
+    default-router 10.1.171.8
+    dns-server 8.8.8.8
+    domain-name invitados.com.co
 !}
 
 ! ------------------------------------------------------------------------------
@@ -207,22 +265,32 @@ interface Fa0/1
  no shutdown
 
 interface f0/1.170
-  encapsulation dot1Q 10 
+  encapsulation dot1Q 170
   ip address 10.1.170.2 255.255.255.0
+  ip helper-address 10.1.162.1
+
+  standby 170 ip 10.1.170.8
+  standby 170 priority 150
+  standby 170 preempt
 
 interface f0/1.171
-  encapsulation dot1Q 10 
+  encapsulation dot1Q 171
   ip address 10.1.171.2 255.255.255.0
+  ip helper-address 10.1.162.1
+
+  standby 171 ip 10.1.171.8
+  standby 171 priority 100
+  standby 171 preempt
 
 interface f0/1.172
-  encapsulation dot1Q 10 
+  encapsulation dot1Q 172
   ip address 10.1.172.2 255.255.255.0
 
 interface f0/1.173
-  encapsulation dot1Q 10 
+  encapsulation dot1Q 173
   ip address 10.1.173.2 255.255.255.0
 
 interface f0/1.174
-  encapsulation dot1Q 10 
+  encapsulation dot1Q 174
   ip address 10.1.174.2 255.255.255.0
 !}
