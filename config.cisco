@@ -294,3 +294,46 @@ interface f0/1.174
   encapsulation dot1Q 174
   ip address 10.1.174.2 255.255.255.0
 !}
+
+!----------------------------------------------------
+RB
+!----------------------------------------------------
+
+!{
+ipv6 unicast-routing
+
+ipv6 dhcp pool LAN-ServerB-Stateful
+  address prefix 3000:2:1::/64
+  dns-server 2001:4860:4860::8888
+  domain-name servidores.com.co
+
+ipv6 dhcp pool LAN-SedeB-Stateless
+  dns-server 2001:4860:4860::8888
+  domain-name sedeB.com.co
+
+interface fa0/1
+  ip add 10.2.1.4 255.255.255.0
+  ipv6 add 3000:2:1::4/64
+  ipv6 nd managed-config-flag
+  ipv6 nd prefix default no-autoconfig
+  ipv6 dhcp server LAN-ServerB-Stateful
+  no sh
+
+interface fa0/0
+  ip add 10.2.2.4 255.255.255.0 
+  ipv6 add 3000:2:2::4/64
+  ipv6 nd other-config-flag
+  ipv6 dhcp server LAN-SedeB-Stateless
+  no sh
+!}
+
+!--------------------------------------------------------
+SB
+!--------------------------------------------------------
+
+!{ 
+interface vlan1
+ip add 10.2.2.5 255.255.255.0
+!}
+
+
