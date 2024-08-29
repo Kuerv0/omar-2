@@ -300,6 +300,7 @@ RB
 !----------------------------------------------------
 
 !{
+
 ipv6 unicast-routing
 
 ipv6 dhcp pool LAN-ServerB-Stateful
@@ -325,15 +326,18 @@ interface fa0/0
   ipv6 nd other-config-flag
   ipv6 dhcp server LAN-SedeB-Stateless
   no sh
+
 !}
 
 !--------------------------------------------------------
-SB
+! SB
 !--------------------------------------------------------
 
 !{ 
+
 interface vlan1
-ip add 10.2.2.5 255.255.255.0
+  ip add 10.2.2.5 255.255.255.0
+
 !}
 
 
