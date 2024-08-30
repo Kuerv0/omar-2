@@ -84,7 +84,7 @@ interface range Fa0/23 - 24
 spanning-tree mode rapid-pvst
 
 ! ¿Cuál es manual y cuál es auto?
-spanning-tree vlan 171 root secondary
+spanning-tree vlan 171 root primary
 
 interface vlan 172
   ip address 10.1.172.6
@@ -178,7 +178,7 @@ vlan 174
 
 interface Fa0/1
   no switchport
-  ip address 10.1.163.2 255.255.255.0
+  ip address 10.1.163.3 255.255.255.0
   no shutdown
 
 interface Fa0/2
@@ -188,8 +188,6 @@ interface range Fa0/3 - 24 , Gig0/1 , Gig0/2
  switchport access vlan 174
  switchport mode access
  shutdown
-
-spanning-tree mode rapid-pvst
 
 interface vlan 170
   ip address 10.1.170.3 255.255.255.0
@@ -221,6 +219,11 @@ interface vlan 174
 
 ip routing
 
+ip route 0.0.0.0 0.0.0.0 10.1.163.1
+
+! Una ruta por defecto alternativa hacia R2 por VLAN
+
+ip route 0.0.0.0 0.0.0.0 10.1.172.2 10
 !}
 
 ! ------------------------------------------------------------------------------
@@ -250,6 +253,17 @@ ip dhcp pool DEADPOOL-INVITADOS
     default-router 10.1.171.8
     dns-server 8.8.8.8
     domain-name invitados.com.co
+
+interface Se0/0/0
+  ip address 10.12.0.1 255.255.255.252
+  no shutdown
+  clock rate 6400
+  
+ip route 0.0.0.0 0.0.0.0 10.12.0.2
+
+ip route 10.1.168.0 255.255.248.0 10.1.163.3
+
+ip route 10.1.168.0 255.255.248.0 10.1.162.2 10
 !}
 
 ! ------------------------------------------------------------------------------
@@ -293,10 +307,17 @@ interface f0/1.173
 interface f0/1.174
   encapsulation dot1Q 174
   ip address 10.1.174.2 255.255.255.0
+
+ip route 0.0.0.0 0.0.0.0 10.1.162.1 
+
+! Una ruta por defecto principal hacia MLA?
+
+ip route 0.0.0.0 0.0.0.0 10.1.172.3 10
+
 !}
 
 !----------------------------------------------------
-RB
+! RB
 !----------------------------------------------------
 
 !{
@@ -327,6 +348,12 @@ interface fa0/0
   ipv6 dhcp server LAN-SedeB-Stateless
   no sh
 
+interface Se0/2/1
+  ip address 10.12.0.2 255.255.255.252
+  no shutdown
+  clock rate 6400
+
+ip route 0.0.0.0 0.0.0.0 Se0/2/1
 !}
 
 !--------------------------------------------------------
