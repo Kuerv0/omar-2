@@ -3,6 +3,8 @@
 ! ------------------------------------------------------------------------------
 
 !{
+hostname SA1
+
 vlan 170
   name EMPLEADOS
 vlan 171
@@ -48,6 +50,8 @@ interface vlan 172
 ! ------------------------------------------------------------------------------
 
 !{
+hostname SA2
+
 vlan 170
   name EMPLEADOS
 vlan 171
@@ -83,7 +87,7 @@ interface range Fa0/23 - 24
 
 spanning-tree mode rapid-pvst
 
-! ¿Cuál es manual y cuál es auto?
+!Cual es manual y cual es auto
 spanning-tree vlan 171 root primary
 
 interface vlan 172
@@ -97,6 +101,8 @@ interface vlan 172
 ! ------------------------------------------------------------------------------
 
 !{
+hostname SA3
+
 vlan 170
   name EMPLEADOS
 vlan 171
@@ -138,7 +144,7 @@ interface range Fa0/11 - 12
   switchport port-security maximum 1
   switchport port-security violation restrict
 
-interface range Fa0/3 - 10 , Fa0/13 - 20 , Gig0/2
+interface range Fa0/3 - 10 , Fa0/13 - 20
  switchport access vlan 174
  switchport mode access
  shutdown
@@ -164,6 +170,7 @@ interface vlan 172
 ! ------------------------------------------------------------------------------
 
 !{
+hostname MLA
   
 vlan 170
   name EMPLEADOS
@@ -188,6 +195,7 @@ interface range Fa0/3 - 24 , Gig0/1 , Gig0/2
  switchport access vlan 174
  switchport mode access
  shutdown
+
 
 interface vlan 170
   ip address 10.1.170.3 255.255.255.0
@@ -231,6 +239,8 @@ ip route 0.0.0.0 0.0.0.0 10.1.172.2 10
 ! ------------------------------------------------------------------------------
 
 !{
+hostname RA1
+
 interface Fa0/1
   no shutdown
   ip address 10.1.162.1 255.255.255.0
@@ -257,7 +267,7 @@ ip dhcp pool DEADPOOL-INVITADOS
 interface Se0/0/0
   ip address 10.12.0.1 255.255.255.252
   no shutdown
-  clock rate 6400
+  clock rate 64000
   
 ip route 0.0.0.0 0.0.0.0 10.12.0.2
 
@@ -271,6 +281,8 @@ ip route 10.1.168.0 255.255.248.0 10.1.162.2 10
 ! ------------------------------------------------------------------------------
 
 !{
+hostname RA2
+
 interface Fa0/0
   no shutdown
   ip address 10.1.162.2 255.255.255.0
@@ -321,6 +333,7 @@ ip route 0.0.0.0 0.0.0.0 10.1.172.3 10
 !----------------------------------------------------
 
 !{
+hostname RB
 
 ipv6 unicast-routing
 
@@ -348,12 +361,12 @@ interface fa0/0
   ipv6 dhcp server LAN-SedeB-Stateless
   no sh
 
-interface Se0/2/1
+interface Se0/0/0
   ip address 10.12.0.2 255.255.255.252
   no shutdown
-  clock rate 6400
+  clock rate 64000
 
-ip route 0.0.0.0 0.0.0.0 Se0/2/1
+ip route 0.0.0.0 0.0.0.0 Se0/0/0
 !}
 
 !--------------------------------------------------------
@@ -361,10 +374,29 @@ ip route 0.0.0.0 0.0.0.0 Se0/2/1
 !--------------------------------------------------------
 
 !{ 
+hostname SB
 
 interface vlan1
   ip add 10.2.2.5 255.255.255.0
 
 !}
 
+!--------------------------------------------------------
+! AP1
+!--------------------------------------------------------
 
+!{ 
+
+dot11 ssid WLANA
+  vlan 171
+  authentication open
+  guest-mode
+
+interface dot11Radio 0
+  encapsulation dot1Q 171 native
+  ssid WLANA
+  exit
+
+write
+
+!} 
