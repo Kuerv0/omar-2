@@ -37,10 +37,10 @@ interface range Fa0/23 - 24
 
 spanning-tree mode rapid-pvst
 
-spanning-tree vlan 170 root primary
+spanning-tree vlan 170 priority 16384
 
 interface vlan 172
-  ip address 10.1.172.5
+  ip address 10.1.172.5 255.255.255.0
   no shutdown
 
 !}
@@ -91,7 +91,7 @@ spanning-tree mode rapid-pvst
 spanning-tree vlan 171 root primary
 
 interface vlan 172
-  ip address 10.1.172.6
+  ip address 10.1.172.6 255.255.255.0
   no shutdown
 
 !}
@@ -160,7 +160,7 @@ interface range Fa0/21 - 22
 spanning-tree mode rapid-pvst
 
 interface vlan 172
-  ip address 10.1.172.7
+  ip address 10.1.172.7 255.255.255.0
   no shutdown
 
 !}
@@ -361,12 +361,12 @@ interface fa0/0
   ipv6 dhcp server LAN-SedeB-Stateless
   no sh
 
-interface Se0/0/0
+interface Se0/2/1
   ip address 10.12.0.2 255.255.255.252
   no shutdown
   clock rate 64000
 
-ip route 0.0.0.0 0.0.0.0 Se0/0/0
+ip route 0.0.0.0 0.0.0.0 Se0/2/1
 !}
 
 !--------------------------------------------------------
